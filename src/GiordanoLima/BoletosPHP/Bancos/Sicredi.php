@@ -2,8 +2,6 @@
 
 namespace GiordanoLima\BoletosPHP\Bancos;
 
-namespace App\Libraries\Boletos\Bancos;
-
 class Sicredi
 {
     public static $requires = [
