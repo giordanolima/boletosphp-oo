@@ -1,4 +1,5 @@
 # BoletosPHP Orientado à Objetos
+[![Latest Stable Version](https://poser.pugx.org/giordanolima/boletosphp-oo/v/stable)](https://packagist.org/packages/giordanolima/boletosphp-oo) [![Total Downloads](https://poser.pugx.org/giordanolima/boletosphp-oo/downloads)](https://packagist.org/packages/giordanolima/boletosphp-oo) [![License](https://poser.pugx.org/giordanolima/boletosphp-oo/license)](https://packagist.org/packages/giordanolima/boletosphp-oo) [![StyleCI](https://styleci.io/repos/48493988/shield)](https://styleci.io/repos/48493988)
 Esse pacote foi criado a partir do pacote BoletosPHP original ([link](http://boletophp.com.br/)) e fornece a mesma lógica, porém orientado a objeto, para uma melhor aplicação em frameworks e uso através do composer.
 
 ## Pacote em desenvolvimento
