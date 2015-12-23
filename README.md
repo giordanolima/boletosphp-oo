@@ -24,6 +24,7 @@ echo $boleto->render();
 
 ## Constantes
 Ao instanciar a classe, o banco que será gerado o boleto deverá ser passado como parâmetro. Segue abaixo a tabela dos bancos e suas respectivas constantes:
+
 | Banco   | Constante          |
 | ------- | ------------------ |
 | Itaú    | BOLETOSPHP_ITAU    |
@@ -41,6 +42,7 @@ $boleto->setData([
 ]);
 ```
 Os dados padrão a todos os bancos são:
+
 |        Campo       | Descrição                                                 | Obrigatório |
 |:------------------:|-----------------------------------------------------------|:-----------:|
 |    valor_boleto    | Valor do boleto no formato de moeda brasileira.           |     SIM     |
@@ -77,6 +79,7 @@ Cada banco possui seus campos específicos, são eles, respectivamente:
 ### Itaú
 Não existem campos específicos para esse banco.
 ### Sicredi
+
 |   Campo  | Descrição                                                                          | Obrigatório |
 |:--------:|------------------------------------------------------------------------------------|:-----------:|
 |   posto  | Código do posto da cooperativa de crédito                                          |     SIM     |
