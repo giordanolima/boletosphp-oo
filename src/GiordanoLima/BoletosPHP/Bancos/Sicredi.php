@@ -1,72 +1,84 @@
-<?php namespace GiordanoLima\BoletosPHP\Bancos;
+<?php
+
+namespace GiordanoLima\BoletosPHP\Bancos;
 
 namespace App\Libraries\Boletos\Bancos;
 
-class Sicredi {
-
-    static public $requires = [
-        "posto",
-        "byte_idt",
-        "carteira"
+class Sicredi
+{
+    public static $requires = [
+        'posto',
+        'byte_idt',
+        'carteira',
     ];
 
-    static public function render($boleto) {
+    public static function render($boleto)
+    {
         $dadosboleto = $boleto->getDadosBoleto();
-        $codigobanco = "748";
+        $codigobanco = '748';
         $codigo_banco_com_dv = self::geraCodigoBanco($codigobanco);
-        $nummoeda = "9";
-        $fator_vencimento = self::fator_vencimento($dadosboleto["data_vencimento"]);
+        $nummoeda = '9';
+        $fator_vencimento = self::fator_vencimento($dadosboleto['data_vencimento']);
 
-        $valor = self::formata_numero($dadosboleto["valor_boleto"], 10, 0, "valor");
-        $agencia = self::formata_numero($dadosboleto["agencia"], 4, 0);
-        $posto = self::formata_numero($dadosboleto["posto"], 2, 0);
-        $conta = self::formata_numero($dadosboleto["conta"], 5, 0);
-        $conta_dv = self::formata_numero($dadosboleto["conta_dv"], 1, 0);
-        $carteira = $dadosboleto["carteira"];
+        $valor = self::formata_numero($dadosboleto['valor_boleto'], 10, 0, 'valor');
+        $agencia = self::formata_numero($dadosboleto['agencia'], 4, 0);
+        $posto = self::formata_numero($dadosboleto['posto'], 2, 0);
+        $conta = self::formata_numero($dadosboleto['conta'], 5, 0);
+        $conta_dv = self::formata_numero($dadosboleto['conta_dv'], 1, 0);
+        $carteira = $dadosboleto['carteira'];
 
         $filler1 = 1;
         $filler2 = 0;
 
-        $byteidt = $dadosboleto["byte_idt"];
+        $byteidt = $dadosboleto['byte_idt'];
         $tipo_cobranca = 3;
         $tipo_carteira = 1;
-        $nnum = $dadosboleto["inicio_nosso_numero"] . $byteidt . self::formata_numero($dadosboleto["nosso_numero"], 5, 0);
+        $nnum = $dadosboleto['inicio_nosso_numero'].$byteidt.self::formata_numero($dadosboleto['nosso_numero'], 5, 0);
         $dv_nosso_numero = self::digitoVerificador_nossonumero("$agencia$posto$conta$nnum");
         $nossonumero_dv = "$nnum$dv_nosso_numero";
         $campolivre = "$tipo_cobranca$tipo_carteira$nossonumero_dv$agencia$posto$conta$filler1$filler2";
-        $campolivre_dv = $campolivre . self::digitoVerificador_campolivre($campolivre);
+        $campolivre_dv = $campolivre.self::digitoVerificador_campolivre($campolivre);
         $dv = self::digitoVerificador_barra("$codigobanco$nummoeda$fator_vencimento$valor$campolivre_dv", 9, 0);
         $linha = "$codigobanco$nummoeda$dv$fator_vencimento$valor$campolivre_dv";
-        $nossonumero = substr($nossonumero_dv, 0, 2) . '/' . substr($nossonumero_dv, 2, 6) . '-' . substr($nossonumero_dv, 8, 1);
-        $agencia_codigo = $agencia . "." . $posto . "." . $conta;
+        $nossonumero = substr($nossonumero_dv, 0, 2).'/'.substr($nossonumero_dv, 2, 6).'-'.substr($nossonumero_dv, 8, 1);
+        $agencia_codigo = $agencia.'.'.$posto.'.'.$conta;
 
-        $dadosboleto["codigo_barras"] = $linha;
-        $dadosboleto["linha_digitavel"] = self::monta_linha_digitavel($linha);
-        $dadosboleto["agencia_codigo"] = $agencia_codigo;
-        $dadosboleto["codigo_banco_com_dv"] = $codigo_banco_com_dv;
-        $dadosboleto["nosso_numero"] = $nossonumero;
+        $dadosboleto['codigo_barras'] = $linha;
+        $dadosboleto['linha_digitavel'] = self::monta_linha_digitavel($linha);
+        $dadosboleto['agencia_codigo'] = $agencia_codigo;
+        $dadosboleto['codigo_banco_com_dv'] = $codigo_banco_com_dv;
+        $dadosboleto['nosso_numero'] = $nossonumero;
         $boleto->nossoNumero = $nossonumero;
-        
+
         ob_start();
-        require __DIR__."/../includes/layout_sicredi.php";
+        require __DIR__.'/../includes/layout_sicredi.php';
         $r = ob_get_contents();
         ob_end_clean();
+
         return $r;
     }
 
     /* ======------- FUNÇOES -------======= */
-    static public function geraCodigoBanco($numero) {
+
+    public static function geraCodigoBanco($numero)
+    {
         $parte1 = substr($numero, 0, 3);
-        return $parte1 . "-X";
+
+        return $parte1.'-X';
     }
-    static public function fator_vencimento($data) {
-        $data = explode("/", $data);
+
+    public static function fator_vencimento($data)
+    {
+        $data = explode('/', $data);
         $ano = $data[2];
         $mes = $data[1];
         $dia = $data[0];
-        return(abs((self::dateToDays("1997", "10", "07")) - (self::dateToDays($ano, $mes, $dia))));
+
+        return abs((self::dateToDays('1997', '10', '07')) - (self::dateToDays($ano, $mes, $dia)));
     }
-    static public function digitoVerificador_nossonumero($numero) {
+
+    public static function digitoVerificador_nossonumero($numero)
+    {
         $resto2 = self::modulo_11($numero, 9, 1);
         $digito = 11 - $resto2;
         if ($digito > 9) {
@@ -74,18 +86,24 @@ class Sicredi {
         } else {
             $dv = $digito;
         }
+
         return $dv;
     }
-    static public function digitoVerificador_campolivre($numero) {
+
+    public static function digitoVerificador_campolivre($numero)
+    {
         $resto2 = self::modulo_11($numero, 9, 1);
         if ($resto2 <= 1) {
             $dv = 0;
         } else {
             $dv = 11 - $resto2;
         }
+
         return $dv;
     }
-    static public function digitoVerificador_barra($numero) {
+
+    public static function digitoVerificador_barra($numero)
+    {
         $resto2 = self::modulo_11($numero, 9, 1);
         $digito = 11 - $resto2;
         if ($digito <= 1 || $digito >= 10) {
@@ -93,29 +111,35 @@ class Sicredi {
         } else {
             $dv = $digito;
         }
+
         return $dv;
     }
-    static public function formata_numero($numero, $loop, $insert, $tipo = "geral") {
-        if ($tipo == "geral") {
-            $numero = str_replace(",", "", $numero);
+
+    public static function formata_numero($numero, $loop, $insert, $tipo = 'geral')
+    {
+        if ($tipo == 'geral') {
+            $numero = str_replace(',', '', $numero);
             while (strlen($numero) < $loop) {
-                $numero = $insert . $numero;
+                $numero = $insert.$numero;
             }
         }
-        if ($tipo == "valor") {
-            $numero = str_replace(",", "", $numero);
+        if ($tipo == 'valor') {
+            $numero = str_replace(',', '', $numero);
             while (strlen($numero) < $loop) {
-                $numero = $insert . $numero;
+                $numero = $insert.$numero;
             }
         }
-        if ($tipo == "convenio") {
+        if ($tipo == 'convenio') {
             while (strlen($numero) < $loop) {
-                $numero = $numero . $insert;
+                $numero = $numero.$insert;
             }
         }
+
         return $numero;
     }
-    static public function dateToDays($year, $month, $day) {
+
+    public static function dateToDays($year, $month, $day)
+    {
         $century = substr($year, 0, 2);
         $year = substr($year, 2, 2);
         if ($month > 2) {
@@ -126,15 +150,18 @@ class Sicredi {
                 $year--;
             } else {
                 $year = 99;
-                $century --;
+                $century--;
             }
         }
-        return ( floor(( 146097 * $century) / 4) +
-                floor(( 1461 * $year) / 4) +
-                floor(( 153 * $month + 2) / 5) +
-                $day + 1721119);
+
+        return  floor((146097 * $century) / 4) +
+                floor((1461 * $year) / 4) +
+                floor((153 * $month + 2) / 5) +
+                $day + 1721119;
     }
-    static public function modulo_10($num) {
+
+    public static function modulo_10($num)
+    {
         $numtotal10 = 0;
         $fator = 2;
 
@@ -143,9 +170,9 @@ class Sicredi {
             $temp = $numeros[$i] * $fator;
             $temp0 = 0;
             foreach (preg_split('//', $temp, -1, PREG_SPLIT_NO_EMPTY) as $k => $v) {
-                $temp0+=$v;
+                $temp0 += $v;
             }
-            $parcial10[$i] = $temp0; 
+            $parcial10[$i] = $temp0;
             $numtotal10 += $parcial10[$i];
             if ($fator == 2) {
                 $fator = 1;
@@ -162,7 +189,9 @@ class Sicredi {
 
         return $digito;
     }
-    static public function modulo_11($num, $base = 9, $r = 0) {
+
+    public static function modulo_11($num, $base = 9, $r = 0)
+    {
         $soma = 0;
         $fator = 2;
         for ($i = strlen($num); $i > 0; $i--) {
@@ -177,15 +206,18 @@ class Sicredi {
         if ($r == 0) {
             $soma *= 10;
             $digito = $soma % 11;
+
             return $digito;
         } elseif ($r == 1) {
             $r_div = (int) ($soma / 11);
             $digito = ($soma - ($r_div * 11));
+
             return $digito;
         }
     }
-    static public function monta_linha_digitavel($codigo) {
 
+    public static function monta_linha_digitavel($codigo)
+    {
         $p1 = substr($codigo, 0, 4);
         $p2 = substr($codigo, 19, 5);
         $p3 = self::modulo_10("$p1$p2");
@@ -216,57 +248,58 @@ class Sicredi {
 
         return "$campo1 $campo2 $campo3 $campo4 $campo5";
     }
-    static public function fbarcode($valor,$imageBasePath) {
 
-        $retorno = "";
+    public static function fbarcode($valor, $imageBasePath)
+    {
+        $retorno = '';
         $fino = 1;
         $largo = 3;
         $altura = 50;
 
-        $barcodes[0] = "00110";
-        $barcodes[1] = "10001";
-        $barcodes[2] = "01001";
-        $barcodes[3] = "11000";
-        $barcodes[4] = "00101";
-        $barcodes[5] = "10100";
-        $barcodes[6] = "01100";
-        $barcodes[7] = "00011";
-        $barcodes[8] = "10010";
-        $barcodes[9] = "01010";
+        $barcodes[0] = '00110';
+        $barcodes[1] = '10001';
+        $barcodes[2] = '01001';
+        $barcodes[3] = '11000';
+        $barcodes[4] = '00101';
+        $barcodes[5] = '10100';
+        $barcodes[6] = '01100';
+        $barcodes[7] = '00011';
+        $barcodes[8] = '10010';
+        $barcodes[9] = '01010';
         for ($f1 = 9; $f1 >= 0; $f1--) {
             for ($f2 = 9; $f2 >= 0; $f2--) {
                 $f = ($f1 * 10) + $f2;
-                $texto = "";
+                $texto = '';
                 for ($i = 1; $i < 6; $i++) {
-                    $texto .= substr($barcodes[$f1], ($i - 1), 1) . substr($barcodes[$f2], ($i - 1), 1);
+                    $texto .= substr($barcodes[$f1], ($i - 1), 1).substr($barcodes[$f2], ($i - 1), 1);
                 }
                 $barcodes[$f] = $texto;
             }
         }
 
         $texto = $valor;
-        if ((strlen($texto) % 2) <> 0) {
-            $texto = "0" . $texto;
+        if ((strlen($texto) % 2) != 0) {
+            $texto = '0'.$texto;
         }
-        
+
         $retorno .= "<img src='".$imageBasePath."p.png' width=$fino height=$altura border=0>";
         $retorno .= "<img src='".$imageBasePath."b.png' width=$fino height=$altura border=0>";
         $retorno .= "<img src='".$imageBasePath."p.png' width=$fino height=$altura border=0>";
         $retorno .= "<img src='".$imageBasePath."b.png' width=$fino height=$altura border=0>";
-        
+
         while (strlen($texto) > 0) {
             $i = round(self::esquerda($texto, 2));
             $texto = self::direita($texto, strlen($texto) - 2);
             $f = $barcodes[$i];
-            for ($i = 1; $i < 11; $i+=2) {
-                if (substr($f, ($i - 1), 1) == "0") {
+            for ($i = 1; $i < 11; $i += 2) {
+                if (substr($f, ($i - 1), 1) == '0') {
                     $f1 = $fino;
                 } else {
                     $f1 = $largo;
                 }
                 $retorno .= "<img src='".$imageBasePath."p.png' width=$f1 height=$altura border=0>";
-                
-                if (substr($f, $i, 1) == "0") {
+
+                if (substr($f, $i, 1) == '0') {
                     $f2 = $fino;
                 } else {
                     $f2 = $largo;
@@ -278,13 +311,17 @@ class Sicredi {
         $retorno .= "<img src='".$imageBasePath."p.png' width=$largo height=$altura border=0>";
         $retorno .= "<img src='".$imageBasePath."b.png' width=$fino height=$altura border=0>";
         $retorno .= "<img src='".$imageBasePath."p.png' width=1 height=$altura border=0>";
-        
+
         return $retorno;
     }
-    static public function esquerda($entra, $comp) {
+
+    public static function esquerda($entra, $comp)
+    {
         return substr($entra, 0, $comp);
     }
-    static public function direita($entra, $comp) {
+
+    public static function direita($entra, $comp)
+    {
         return substr($entra, strlen($entra) - $comp, $comp);
     }
 }
