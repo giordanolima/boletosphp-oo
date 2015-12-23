@@ -4,7 +4,7 @@
 Esse pacote foi criado a partir do pacote BoletosPHP original ([link](http://boletophp.com.br/)) e fornece a mesma lógica, porém orientado a objeto, para uma melhor aplicação em frameworks e uso através do composer.
 
 ## Pacote em desenvolvimento
-Este pacote ainda encontra-se em fase de adaptação e não tem suporte a todos os bancos disponíveis no pacote original. Aos poucos estes vão sendo adicionados. Contribua e ajude com correções de bugs e novas features. Atualmente o pacote possui suporte aos seguintes bancos:
+Este pacote ainda encontra-se em fase de adaptação e não tem suporte a todos os bancos disponíveis no pacote original. Aos poucos estes vão sendo adicionados. Dê um fork e contribua e ajude com correções de bugs e novas features. Atualmente o pacote possui suporte aos seguintes bancos:
 * Itaú
 * Sicredi
 
