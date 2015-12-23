@@ -2,7 +2,7 @@
 
 namespace GiordanoLima\BoletosPHP;
 
-class Boletos
+class BoletosPHP
 {
     const BOLETOSPHP_ITAU = 'ITAU';
     const BOLETOSPHP_SICREDI = 'SICREDI';
