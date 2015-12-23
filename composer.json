@@ -1,0 +1,21 @@
+{
+    "name": "giordanolima/boletosphp-oo",
+    "description": "Pacote BoletosPHP aplicado na estrutura Orientada a Objeto",
+    "keywords": ["boleto", "boletos", "oo"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Giordano de Andrades Lima",
+            "email": "giordanol@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "GiordanoLima\\BoletosPHP": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
