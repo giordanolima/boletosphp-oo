@@ -17,8 +17,8 @@ composer require giordanolima/boletosphp-oo
 
 ## Uso
 ```php
-use GiordanoLima\BoletosPHP\BoletosPHP;
-$boleto = new BoletosPHP(BoletosPHP::BOLETOSPHP_ITAU);
+use GiordanoLima\BoletosPHP\Boletos;
+$boleto = new Boletos(Boletos::BOLETOSPHP_ITAU);
 $boleto->setData([...]);
 $boleto->setImageBasePath("path/to/images/");
 echo $boleto->render();

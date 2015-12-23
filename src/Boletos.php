@@ -2,10 +2,10 @@
 
 namespace GiordanoLima\BoletosPHP;
 
-class BoletosPHP
+class Boletos
 {
-    const BOLETOSPHP_ITAU = 'ITAU';
-    const BOLETOSPHP_SICREDI = 'SICREDI';
+    const BOLETOSPHP_ITAU = 'Itau';
+    const BOLETOSPHP_SICREDI = 'Sicred';
 
     private $banco;
     private $bancoCls;
@@ -32,8 +32,8 @@ class BoletosPHP
      */
     public function __construct($banco)
     {
-        $this->banco = $banco;
-        $this->bancoCls = __NAMESPACE__.'\\Bancos\\'.studly_case(strtolower($banco));
+        $this->banco = strtoupper($banco);
+        $this->bancoCls = __NAMESPACE__.'\\Bancos\\'. $banco ;
         $this->defaults = [
             'numero_documento'   => '',
             'data_documento'     => date('d/m/Y'),
