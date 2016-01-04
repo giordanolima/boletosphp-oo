@@ -33,7 +33,7 @@ class Boletos
     public function __construct($banco)
     {
         $this->banco = strtoupper($banco);
-        $this->bancoCls = __NAMESPACE__.'\\Bancos\\'. $banco ;
+        $this->bancoCls = __NAMESPACE__.'\\Bancos\\'.$banco;
         $this->defaults = [
             'numero_documento'   => '',
             'data_documento'     => date('d/m/Y'),
