@@ -5,7 +5,7 @@ namespace GiordanoLima\BoletosPHP;
 class Boletos
 {
     const BOLETOSPHP_ITAU = 'Itau';
-    const BOLETOSPHP_SICREDI = 'Sicred';
+    const BOLETOSPHP_SICREDI = 'Sicredi';
 
     private $banco;
     private $bancoCls;
@@ -76,7 +76,7 @@ class Boletos
 
     public function setData(array $dadosBoleto)
     {
-        $requires = array_merge($this->requires, get_class_vars($this->bancoCls)['requires']);
+        $requires = array_merge($this->requires, get_class_vars($this->bancoCls)['requires'] ?: []);
         foreach ($requires as $required) {
             if (!array_key_exists($required, $dadosBoleto)) {
                 throw BoletosException::requiredField('É obrigatório o preenchimento do campo '.$required);
