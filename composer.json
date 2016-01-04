@@ -13,8 +13,8 @@
         "php": ">=5.4.0"
     },
     "autoload": {
-        "psr-0": {
-            "GiordanoLima\\BoletosPHP": "src/"
+        "psr-4": {
+            "GiordanoLima\\BoletosPHP\\": "src/"
         }
     },
     "minimum-stability": "stable"
